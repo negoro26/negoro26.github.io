@@ -38,10 +38,10 @@ const Index = () => {
         >
           <ChevronDown className="h-8 w-8" />
         </a>
-      </section >
+      </section>
 
       {/* About / Bento Grid Section */}
-      < section id="about" className="py-20 px-4" >
+      <section id="about" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -54,10 +54,10 @@ const Index = () => {
 
           <BentoGrid />
         </div>
-      </section >
+      </section>
 
       {/* Projects Section */}
-      < section id="projects" className="py-20 px-4 bg-secondary/20" >
+      <section id="projects" className="py-20 px-4 bg-secondary/20">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -70,10 +70,10 @@ const Index = () => {
 
           <ProjectWall />
         </div>
-      </section >
+      </section>
 
       {/* Blog Section */}
-      < section id="blog" className="py-20 px-4" >
+      <section id="blog" className="py-20 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -86,18 +86,18 @@ const Index = () => {
 
           <BlogSection />
         </div>
-      </section >
+      </section>
 
       {/* Footer */}
-      < footer className="py-12 px-4 border-t border-border" >
+      <footer className="py-12 px-4 border-t border-border">
         <div className="container mx-auto text-center">
           <p className="text-muted-foreground text-sm">
             © {new Date().getFullYear()} negoro26. Built with{' '}
             <span className="text-primary">♥</span> and lots of coffee.
           </p>
         </div>
-      </footer >
-    </div >
+      </footer>
+    </div>
   );
 };
 
