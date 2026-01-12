@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useMyBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost } from '@/hooks/useBlogPosts';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,7 +20,8 @@ import {
   FileText,
   Loader2,
   Eye,
-  EyeOff
+  EyeOff,
+  ShieldX
 } from 'lucide-react';
 import type { BlogPost } from '@/types';
 
@@ -27,6 +29,7 @@ type EditorMode = 'list' | 'create' | 'edit';
 
 export default function BlogAdmin() {
   const { user, loading: authLoading, signOut } = useAuth();
+  const { data: isAdmin, isLoading: adminLoading } = useIsAdmin();
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -166,7 +169,7 @@ export default function BlogAdmin() {
     navigate('/');
   };
 
-  if (authLoading) {
+  if (authLoading || adminLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -176,6 +179,30 @@ export default function BlogAdmin() {
 
   if (!user) {
     return null;
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="terminal-window p-8 text-center max-w-md">
+          <ShieldX className="h-16 w-16 text-destructive mx-auto mb-4" />
+          <h1 className="text-2xl font-bold font-mono mb-2">Access Denied</h1>
+          <p className="text-muted-foreground mb-6">
+            You don't have admin privileges to access this page.
+          </p>
+          <div className="flex gap-3 justify-center">
+            <Button variant="outline" onClick={() => navigate('/')}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Go Home
+            </Button>
+            <Button variant="ghost" onClick={handleSignOut}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
