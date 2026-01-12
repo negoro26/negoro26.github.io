@@ -1,7 +1,9 @@
 import { useScrollHeader } from '@/hooks/useScrollHeader';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { Menu, X, Github, Linkedin, Twitter } from 'lucide-react';
+import { Menu, X, Github, Settings } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const navLinks = [
   { href: '#home', label: 'Home' },
@@ -16,6 +18,7 @@ const socialLinks = [
 export function Header() {
   const isScrolled = useScrollHeader(50);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -60,7 +63,7 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Social Links */}
+        {/* Social Links & Admin */}
         <div className="hidden md:flex items-center gap-4">
           {socialLinks.map((link) => (
             <a
@@ -74,6 +77,15 @@ export function Header() {
               <link.icon className="h-5 w-5" />
             </a>
           ))}
+          
+          {/* Admin Link */}
+          <Link
+            to={user ? '/admin/blog' : '/auth'}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            aria-label="Blog Admin"
+          >
+            <Settings className="h-5 w-5" />
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -113,6 +125,14 @@ export function Header() {
                   <link.icon className="h-5 w-5" />
                 </a>
               ))}
+              <Link
+                to={user ? '/admin/blog' : '/auth'}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                aria-label="Blog Admin"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Settings className="h-5 w-5" />
+              </Link>
             </div>
           </nav>
         </div>
