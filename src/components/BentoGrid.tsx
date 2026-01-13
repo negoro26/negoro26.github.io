@@ -1,4 +1,4 @@
-import { useGitHubUser, useGitHubRepos } from '@/hooks/useGitHubData';
+import { useGitHubUser, useGitHubRepos, useGitHubLanguages } from '@/hooks/useGitHubData';
 import { cn } from '@/lib/utils';
 import { 
   Code, 
@@ -14,14 +14,6 @@ import {
 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
-const skills = [
-  { name: 'React', level: 95 },
-  { name: 'TypeScript', level: 90 },
-  { name: 'Python', level: 85 },
-  { name: 'Node.js', level: 88 },
-  { name: 'Rust', level: 70 },
-];
-
 const services = [
   { icon: Globe, label: 'Full-Stack Development' },
   { icon: Database, label: 'Database Architecture' },
@@ -32,6 +24,7 @@ const services = [
 export function BentoGrid() {
   const { data: user, isLoading: userLoading } = useGitHubUser();
   const { data: repos, isLoading: reposLoading } = useGitHubRepos();
+  const { data: languages, isLoading: languagesLoading } = useGitHubLanguages(repos);
 
   const totalStars = repos?.reduce((acc, repo) => acc + repo.stargazers_count, 0) || 0;
   const totalForks = repos?.reduce((acc, repo) => acc + repo.forks_count, 0) || 0;
@@ -113,20 +106,36 @@ export function BentoGrid() {
         </div>
         
         <div className="space-y-3">
-          {skills.map((skill) => (
-            <div key={skill.name} className="space-y-1">
-              <div className="flex justify-between text-sm">
-                <span>{skill.name}</span>
-                <span className="text-muted-foreground">{skill.level}%</span>
+          {languagesLoading ? (
+            <>
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="space-y-1">
+                  <div className="flex justify-between">
+                    <Skeleton className="h-4 w-20" />
+                    <Skeleton className="h-4 w-10" />
+                  </div>
+                  <Skeleton className="h-2 w-full" />
+                </div>
+              ))}
+            </>
+          ) : languages && languages.length > 0 ? (
+            languages.map((lang) => (
+              <div key={lang.name} className="space-y-1">
+                <div className="flex justify-between text-sm">
+                  <span>{lang.name}</span>
+                  <span className="text-muted-foreground">{lang.percentage}%</span>
+                </div>
+                <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-primary to-purple-400 rounded-full transition-all duration-1000"
+                    style={{ width: `${lang.percentage}%` }}
+                  />
+                </div>
               </div>
-              <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-gradient-to-r from-primary to-purple-400 rounded-full transition-all duration-1000"
-                  style={{ width: `${skill.level}%` }}
-                />
-              </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-sm text-muted-foreground">No language data available</p>
+          )}
         </div>
       </div>
 
