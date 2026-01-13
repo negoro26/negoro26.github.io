@@ -41,6 +41,24 @@ export function useBlogPost(slug: string) {
   });
 }
 
+export function useBlogPostById(id: string) {
+  return useQuery({
+    queryKey: ['blog-post-id', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .eq('id', id)
+        .eq('published', true)
+        .maybeSingle();
+
+      if (error) throw error;
+      return data as BlogPost | null;
+    },
+    enabled: !!id,
+  });
+}
+
 export function useMyBlogPosts() {
   return useQuery({
     queryKey: ['my-blog-posts'],
